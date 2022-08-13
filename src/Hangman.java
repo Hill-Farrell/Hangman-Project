@@ -22,13 +22,19 @@ public class Hangman {
 
         List<Character> playerGuesses = new ArrayList<>();
 
-
-
-
-
+        int wrongCount = 0;
         while(true){
+            printHangedMan(wrongCount);
+
+            if(wrongCount >= 6){
+                System.out.println("YOU LOSE!");
+                break;
+            }
+
             printWordState(word, playerGuesses);
-            getPlayerGuess(userInput,word,playerGuesses);
+            if(!getPlayerGuess(userInput,word,playerGuesses)){
+                wrongCount++;
+            }
             if(printWordState(word, playerGuesses)){
                 System.out.println("YOU WIN!!");
                 break;
@@ -47,11 +53,44 @@ public class Hangman {
 
     }
 
-    private static void getPlayerGuess(Scanner userInput, String word, List<Character> playerGuesses) {
+    private static void printHangedMan(int wrongCount) {
+        System.out.println(" -------");
+        System.out.println(" |     |");
+        if (wrongCount >= 1){
+            System.out.println(" O");
+        }
+        if (wrongCount >= 2){
+            System.out.print("\\ ");
+            if(wrongCount >= 3){
+                System.out.println("/");
+            }
+            else {
+                System.out.println("");
+            }
+        }
+        if (wrongCount >= 4){
+            System.out.println(" |");
+        }
+        if (wrongCount >= 5){
+            System.out.print("/ ");
+            if(wrongCount >= 6){
+                System.out.println("\\");
+            }
+            else {
+                System.out.println("");
+            }
+        }
+        System.out.println("");
+        System.out.println("");
+    }
+
+    private static boolean getPlayerGuess(Scanner userInput, String word, List<Character> playerGuesses) {
         System.out.println("Please enter a letter: ");
         String userGuess = userInput.nextLine();
-        String capUserGuess = userGuess.toUpperCase();
-        playerGuesses.add(capUserGuess.charAt(0)); // only takes 1st letter of guess
+        //String capUserGuess = userGuess.toUpperCase();
+        playerGuesses.add(userGuess.charAt(0)); // only takes 1st letter of guess
+
+        return (word.contains(userGuess));
     }
 
 
