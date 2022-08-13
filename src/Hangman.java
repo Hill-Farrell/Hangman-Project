@@ -48,9 +48,6 @@ public class Hangman {
                 System.out.println("Incorrect. Try again.");
             }
         }
-
-
-
     }
 
     private static void printHangedMan(int wrongCount) {
