@@ -5,8 +5,29 @@ import java.util.*;
 public class Hangman {
     public static void startHangman(){
         try {
-            Scanner scanner = new Scanner(new File("./words.txt"));
+
+            String easy = "./wordsEasy.txt";
+            String normal = "./wordsNormal.txt";
+            String hard = "./wordsHard.txt";
+
             Scanner userInput = new Scanner(System.in);
+
+            System.out.println("\n1.Easy\n2.Normal\n3.Hard\n✩ Enter difficulty number: ");
+            String fileName = null;
+
+            switch (userInput.nextLine()) {
+                case "1":
+                    fileName = easy;
+                    break;
+                case "2":
+                    fileName = normal;
+                    break;
+                case "3":
+                    fileName = hard;
+                    break;
+            }
+
+            Scanner scanner = new Scanner(new File(fileName));
 
             List<String> words = new ArrayList<>();
 
@@ -16,8 +37,8 @@ public class Hangman {
 
             Random random = new Random();
             String word = words.get(random.nextInt(words.size())); // Choose random word from ArrayList
-            System.out.println(word); // DELETE LATER
             List<Character> playerGuesses = new ArrayList<>();
+
 
             int wrongCount = 0;
             System.out.println("✩ Welcome to Hangman! Enter letters when prompted ✩ Press 4 to guess the word! ✩");
@@ -31,7 +52,7 @@ public class Hangman {
                 }
                 printWordState(word, playerGuesses);
 
-                if(!getPlayerGuess(userInput,word,playerGuesses,wrongCount)){
+                if(!getPlayerGuess(userInput,word,playerGuesses)){
                     wrongCount++;
                 }
                 if(printWordState(word, playerGuesses)){
@@ -41,6 +62,8 @@ public class Hangman {
             }
         } catch (FileNotFoundException fnf){
             fnf.printStackTrace();
+        } catch (Exception e){
+            System.out.println("Something happened..");
         }
     }
 
@@ -77,7 +100,7 @@ public class Hangman {
     }
 
 
-    private static void wordGuess(Scanner userInput, String word, List<Character> playerGuesses,int wrongCount){
+    private static void wordGuess(Scanner userInput, String word){
         System.out.println("Please enter your guess for the word: ");
         if(userInput.nextLine().toUpperCase().equals(word)){
             System.out.println("YOU WIN!!");
@@ -86,21 +109,17 @@ public class Hangman {
         else {
             System.out.println("Incorrect. Try again.");
         }
-        printHangedMan(wrongCount);
-        printWordState(word, playerGuesses);
-        getPlayerGuess(userInput,word,playerGuesses,wrongCount);
-
     }
 
     // Take user input return only first letter if there are multiple inputs. Also makes input capital letters for consistency
     // Also checks if user presses "4" to start word guess
-    private static boolean getPlayerGuess(Scanner userInput, String word, List<Character> playerGuesses,int wrongCount) {
+    private static boolean getPlayerGuess(Scanner userInput, String word, List<Character> playerGuesses) {
         System.out.println("Please enter a letter: ");
         String userGuess = userInput.nextLine();
         String userGuessCap = userGuess.toUpperCase();
 
         if(userGuess.equals("4")) {
-            wordGuess(userInput, word,playerGuesses,wrongCount);
+            wordGuess(userInput, word);
         }
         else {
             playerGuesses.add(userGuessCap.charAt(0)); // only takes 1st letter of guess
